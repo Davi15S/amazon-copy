@@ -10,4 +10,5 @@ export default NextAuth({
     }),
     // ...add more providers here
   ],
+  secret: "PLACE-HERE-ANY-STRING"
 })
