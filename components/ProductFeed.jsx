@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { StarIcon } from "@heroicons/react/solid";
 import Currency from "react-currency-formatter";
+import { useDispatch } from "react-redux";
+import { addToBasket } from "../redux/basketSlice"
 
 function ProductFeed({ products }) {
   return (
@@ -21,7 +23,7 @@ function ProductFeed({ products }) {
         ))}
 
       <img
-        className="md:col-span-full"
+        className="md:col-span-full mx-auto"
         src="https://links.papareact.com/dyz"
         alt=""
       />
@@ -43,18 +45,18 @@ function ProductFeed({ products }) {
       </div>
 
       {products
-          .slice(5,products.lenght)
-          .map(({ id, title, price, description, category, image }) => (
-            <Product
-              key={id}
-              id={id}
-              title={title}
-              price={price}
-              description={description}
-              category={category}
-              image={image}
-            />
-          ))}
+        .slice(5, products.lenght)
+        .map(({ id, title, price, description, category, image }) => (
+          <Product
+            key={id}
+            id={id}
+            title={title}
+            price={price}
+            description={description}
+            category={category}
+            image={image}
+          />
+        ))}
     </div>
   );
 }
@@ -62,6 +64,22 @@ function ProductFeed({ products }) {
 function Product({ id, title, price, description, category, image }) {
   const [rating] = useState(Math.floor(Math.random() * 5) + 1);
   const [hasPrime] = useState(Math.random() < 0.5);
+
+  const dispatch = useDispatch();
+  const addItemToBasket = () => {
+    const product = {
+      id,
+      title,
+      price,
+      description,
+      category,
+      image,
+      rating,
+      hasPrime,
+    };
+
+    dispatch(addToBasket(product))
+  };
 
   return (
     <div className="relative flex flex-col m-5 bg-white z-30 p-10">
@@ -76,8 +94,8 @@ function Product({ id, title, price, description, category, image }) {
       <div className="flex">
         {Array(rating)
           .fill()
-          .map(() => (
-            <StarIcon className="h-5 text-yellow-500" />
+          .map((_, i) => (
+            <StarIcon key={i} className="h-5 text-yellow-500" />
           ))}
       </div>
 
@@ -94,7 +112,10 @@ function Product({ id, title, price, description, category, image }) {
         </div>
       )}
 
-      <button className="mt-auto p-2 text-xs md:text-sm bg-gradient-to-b from-yellow-200 to-yellow-400 border border-yellow-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 active:from-yellow-500">
+      <button
+        onClick={addItemToBasket}
+        className="mt-auto p-2 text-xs md:text-sm bg-gradient-to-b from-yellow-200 to-yellow-400 border border-yellow-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 active:from-yellow-500"
+      >
         Add to busket
       </button>
     </div>
